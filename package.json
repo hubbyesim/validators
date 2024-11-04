@@ -1,0 +1,13 @@
+{
+    "name": "@hubbyesim/validators",
+    "version": "1.0.0",
+    "main": "index.ts",
+    "private": true,
+    "dependencies": {
+      "joi": "^17.13.3"
+    },
+    "devDependencies": {
+      "@types/node": "^20.14.13",
+      "typescript": "^5.5.4"
+    }
+}
