@@ -1,13 +1,27 @@
 {
-    "name": "@hubbyesim/validators",
-    "version": "1.0.0",
-    "main": "index.ts",
-    "private": true,
-    "dependencies": {
-      "joi": "^17.13.3"
-    },
-    "devDependencies": {
-      "@types/node": "^20.14.13",
-      "typescript": "^5.5.4"
-    }
+  "name": "@hubbyesim/validators",
+  "version": "1.0.0",
+  "description": "Validators for the hubbyesim project",
+  "main": "index.js",
+  "types": "index.ts",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "prepare": "npm run clean && npm run build"
+  },
+  "dependencies": {
+    "joi": "^17.13.3"
+  },
+  "devDependencies": {
+    "@types/joi": "^17.2.2",
+    "@types/node": "^20.14.13",
+    "typescript": "^5.5.4"
+  },
+  "peerDependencies": {
+    "@hubbyesim/types": "*"
+  }
 }
