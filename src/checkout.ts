@@ -8,14 +8,12 @@ export interface CheckoutSchema {
   cancelUrl: string;
 }
 
-export const checkoutSchema = (): Joi.ObjectSchema<CheckoutSchema> => {
-  return Joi.object<CheckoutSchema>({
-    email: Joi.string().email().required(),
-    partnerId: Joi.string().required(),
-    packageId: Joi.string().required(),
-    successUrl: Joi.string().uri().required(),
-    cancelUrl: Joi.string().uri().required(),
-  })
-    .label('Checkout')
-    .options({ abortEarly: false, stripUnknown: true });
-};
+export const checkoutSchema = Joi.object<CheckoutSchema>({
+  email: Joi.string().email().required(),
+  partnerId: Joi.string().required(),
+  packageId: Joi.string().required(),
+  successUrl: Joi.string().uri().required(),
+  cancelUrl: Joi.string().uri().required(),
+})
+  .label('Checkout')
+  .options({ abortEarly: false, stripUnknown: true });
