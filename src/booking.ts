@@ -36,42 +36,40 @@ export interface BookingSchema {
 const sizePattern = /^[1-9]\d*(MB|GB)$/;
 const destinationPattern = /^[A-Z]{2,3}$/;
 
-export const bookingSchema = (): Joi.ObjectSchema<BookingSchema> => {
-  const packageSpecificationSchema = Joi.object<PackageSpecification>({
-    package_id: Joi.string(),
-    destination: Joi.string().pattern(destinationPattern),
-    iata_code: Joi.string().pattern(destinationPattern),
-    size: Joi.string().pattern(sizePattern),
-  })
-    .or('package_id', 'destination', 'iata_code');
+const packageSpecificationSchema = Joi.object<PackageSpecification>({
+  package_id: Joi.string(),
+  destination: Joi.string().pattern(destinationPattern),
+  iata_code: Joi.string().pattern(destinationPattern),
+  size: Joi.string().pattern(sizePattern),
+})
+  .or('package_id', 'destination', 'iata_code');
 
-  const communication_options = Joi.object<CommunicationOptions>({
-    should_send_message: Joi.boolean().required(),
-    channels: Joi.array().items(Joi.string().valid('EMAIL', 'PUSH', 'SMS', 'WHATSAPP')).optional(),
-  });
+const communication_options = Joi.object<CommunicationOptions>({
+  should_send_message: Joi.boolean().required(),
+  channels: Joi.array().items(Joi.string().valid('EMAIL', 'PUSH', 'SMS', 'WHATSAPP')).optional(),
+});
 
-  return Joi.object<BookingSchema>({
-    departure_date: Joi.date().iso().required(),
-    email: Joi.string().email().optional(),
-    phone: Joi.string()
-      .pattern(/^\+\d{1,3}\d{1,14}$/)
-      .optional(),
-    first_name: Joi.string().min(1).max(100).optional(),
-    last_name: Joi.string().min(1).max(100).optional(),
-    full_name: Joi.string().min(1).max(200).optional(),
-    title: Joi.string().valid('mr.', 'ms.', 'mrs.', 'miss', 'dr.', 'prof.').insensitive().optional(),
-    pax: Joi.number().integer().min(1).optional(),
-    return_date: Joi.date().iso().min(Joi.ref('departure_date')).required(),
-    flight_number: Joi.string().alphanum().min(1).max(10).optional(),
-    gender: Joi.string().valid('M', 'F', 'O').optional(),
-    date_of_birth: Joi.date().iso().max('now').optional(),
-    data: Joi.object().optional(),
-    locale: Joi.string().min(2).max(5).optional(),
-    booking_id: Joi.string().optional().min(3),
-    communication_options: communication_options.required(),
-    package_specifications: Joi.array().items(packageSpecificationSchema).min(1).required(),
-  })
-    .label('Booking')
-    .or('email', 'booking_id')
-    .options({ abortEarly: false, stripUnknown: true });
-};
+export const bookingSchema = Joi.object<BookingSchema>({
+  departure_date: Joi.date().iso().required(),
+  email: Joi.string().email().optional(),
+  phone: Joi.string()
+    .pattern(/^\+\d{1,3}\d{1,14}$/)
+    .optional(),
+  first_name: Joi.string().min(1).max(100).optional(),
+  last_name: Joi.string().min(1).max(100).optional(),
+  full_name: Joi.string().min(1).max(200).optional(),
+  title: Joi.string().valid('mr.', 'ms.', 'mrs.', 'miss', 'dr.', 'prof.').insensitive().optional(),
+  pax: Joi.number().integer().min(1).optional(),
+  return_date: Joi.date().iso().min(Joi.ref('departure_date')).required(),
+  flight_number: Joi.string().alphanum().min(1).max(10).optional(),
+  gender: Joi.string().valid('M', 'F', 'O').optional(),
+  date_of_birth: Joi.date().iso().max('now').optional(),
+  data: Joi.object().optional(),
+  locale: Joi.string().min(2).max(5).optional(),
+  booking_id: Joi.string().optional().min(3),
+  communication_options: communication_options.required(),
+  package_specifications: Joi.array().items(packageSpecificationSchema).min(1).required(),
+})
+  .label('Booking')
+  .or('email', 'booking_id')
+  .options({ abortEarly: false, stripUnknown: true });
