@@ -8,7 +8,7 @@ export interface CheckoutSchema {
   cancelUrl: string;
 }
 
-export const checkoutSchema = async (): Promise<Joi.ObjectSchema<CheckoutSchema>> => {
+export const checkoutSchema = (): Joi.ObjectSchema<CheckoutSchema> => {
   return Joi.object<CheckoutSchema>({
     email: Joi.string().email().required(),
     partnerId: Joi.string().required(),

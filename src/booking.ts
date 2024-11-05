@@ -36,7 +36,7 @@ export interface BookingSchema {
 const sizePattern = /^[1-9]\d*(MB|GB)$/;
 const destinationPattern = /^[A-Z]{2,3}$/;
 
-export const bookingSchema = async (): Promise<Joi.ObjectSchema<BookingSchema>> => {
+export const bookingSchema = (): Joi.ObjectSchema<BookingSchema> => {
   const packageSpecificationSchema = Joi.object<PackageSpecification>({
     package_id: Joi.string(),
     destination: Joi.string().pattern(destinationPattern),

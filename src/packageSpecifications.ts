@@ -14,7 +14,7 @@ export interface PackageSpecificationsSchema {
 const sizePattern = /^[1-9]\d*(MB|GB)$/;
 const destinationPattern = /^[A-Z]{2,3}$/;
 
-export const packageSpecificationsSchema = async (): Promise<Joi.ObjectSchema<PackageSpecificationsSchema>> => {
+export const packageSpecificationsSchema = (): Joi.ObjectSchema<PackageSpecificationsSchema> => {
   const packageSpecificationSchema = Joi.object<PackageSpecification>({
     package_id: Joi.string(), // package_id property can be any string
     destination: Joi.string().pattern(destinationPattern), // ISO3 string for destination

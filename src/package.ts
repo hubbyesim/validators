@@ -11,7 +11,7 @@ export interface PackageSchema {
 const destinationPattern = /^[A-Z]{2,3}$/;
 const sizePattern = /^[0-9]\d*(\.\d+)?(MB|GB)$/;
 
-export const packageSchema = async (): Promise<Joi.ObjectSchema<PackageSchema>> => {
+export const packageSchema = (): Joi.ObjectSchema<PackageSchema> => {
   return Joi.object<PackageSchema>({
     size: Joi.string().required().pattern(sizePattern), // size in the form of "500MB" or "3GB" or "3.25 GB"
     iso: Joi.string().required().pattern(destinationPattern),

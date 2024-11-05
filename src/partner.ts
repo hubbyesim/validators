@@ -23,7 +23,7 @@ export interface PartnerSchema {
   travelSpiritConfig?: Record<string, unknown>;
 }
 
-export const partnerSchema = async (): Promise<Joi.ObjectSchema<PartnerSchema>> => {
+export const partnerSchema = (): Joi.ObjectSchema<PartnerSchema> => {
   return Joi.object<PartnerSchema>({
     administration_fee: Joi.number().required(),
     income_per_gb: Joi.number().required(),
