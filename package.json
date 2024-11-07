@@ -4,7 +4,6 @@
   "description": "Validators for the hubbyesim project",
   "main": "dist/index.js",
   "types": "dist/index.ts",
-  "private": true,
   "engines": {
     "node": ">=20"
   },
