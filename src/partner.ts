@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { isValidIBAN } from 'iban';
+import * as IBAN from 'iban';
 
 export interface PartnerSchema {
   administration_fee: number;
@@ -44,10 +44,10 @@ export const partnerSchema = Joi.object<PartnerSchema>({
     iban: Joi.string()
       .required()
       .custom((value, helpers) => {
-        if (!isValidIBAN(value)) {
+        if (!IBAN.isValid(value)) {
           return helpers.error('any.invalid', { label: 'IBAN' });
         }
-        return value; // Valid IBAN
+        return value;
       }, 'Global IBAN validation'),
   }).required(),
   office_phone: Joi.string().optional(),
