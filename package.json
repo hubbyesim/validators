@@ -13,6 +13,7 @@
     "prepare": "npm run clean && npm run build"
   },
   "dependencies": {
+    "iban": "^0.0.14",
     "joi": "^17.13.3"
   },
   "devDependencies": {
