@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import { isValidIBAN } from 'iban';
 
 export interface PartnerSchema {
   administration_fee: number;
@@ -9,6 +10,11 @@ export interface PartnerSchema {
   last_invoice: Date;
   next_invoice: Date;
   address?: Record<string, unknown>;
+  banking_details: {
+    account_holder: string;
+    bank_name: string;
+    iban: string;
+  };
   office_phone?: string;
   chamber_of_commerce_number?: string;
   vat_number?: string;
@@ -32,6 +38,18 @@ export const partnerSchema = Joi.object<PartnerSchema>({
   last_invoice: Joi.date().iso().required(),
   next_invoice: Joi.date().iso().required().min(Joi.ref('last_invoice')),
   address: Joi.object().optional(),
+  banking_details: Joi.object({
+    account_holder: Joi.string().required(),
+    bank_name: Joi.string().required(),
+    iban: Joi.string()
+      .required()
+      .custom((value, helpers) => {
+        if (!isValidIBAN(value)) {
+          return helpers.error('any.invalid', { label: 'IBAN' });
+        }
+        return value; // Valid IBAN
+      }, 'Global IBAN validation'),
+  }).required(),
   office_phone: Joi.string().optional(),
   chamber_of_commerce_number: Joi.string().optional(),
   vat_number: Joi.string().optional(),
