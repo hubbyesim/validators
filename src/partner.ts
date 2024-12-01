@@ -9,12 +9,22 @@ export interface PartnerSchema {
   name: string;
   last_invoice: Date;
   next_invoice: Date;
-  address?: Record<string, unknown>;
+  address?: {
+    street?: string;
+    city?: string;
+    postal_code?: string;
+    country?: string;
+  };
   banking_details: {
     account_holder: string;
     bank_name: string;
     iban: string;
   };
+  users?: {
+    name: string;
+    email: string;
+  }[];
+  tax_number?: string;
   office_phone?: string;
   chamber_of_commerce_number?: string;
   vat_number?: string;
@@ -37,7 +47,12 @@ export const partnerSchema = Joi.object<PartnerSchema>({
   name: Joi.string().required(),
   last_invoice: Joi.date().iso().required(),
   next_invoice: Joi.date().iso().required().min(Joi.ref('last_invoice')),
-  address: Joi.object().optional(),
+  address: Joi.object({
+    street: Joi.string().optional(),
+    city: Joi.string().optional(),
+    postal_code: Joi.string().optional(),
+    country: Joi.string().optional(),
+  }).optional(),
   banking_details: Joi.object({
     account_holder: Joi.string().required(),
     bank_name: Joi.string().required(),
@@ -50,6 +65,13 @@ export const partnerSchema = Joi.object<PartnerSchema>({
         return value;
       }, 'Global IBAN validation'),
   }).required(),
+  users: Joi.array().items(
+    Joi.object({
+        name: Joi.string().required(),
+        email: Joi.string().email().required()
+    })
+  ).optional().min(1),
+  tax_number: Joi.string().optional(),
   office_phone: Joi.string().optional(),
   chamber_of_commerce_number: Joi.string().optional(),
   vat_number: Joi.string().optional(),
