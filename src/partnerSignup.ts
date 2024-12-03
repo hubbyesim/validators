@@ -23,6 +23,7 @@ export interface PartnerSignupSchema {
         email: string;
     }[];
     vat_number?: string;
+    visualIdentity?: Record<string, unknown>;
     logoBase64?: string;
     bannerBase64?: string;
 }
@@ -41,10 +42,21 @@ export const partnerSignupSchema = Joi.object<PartnerSignupSchema>({
             .required()
             .custom((value, helpers) => {
                 if (!IBAN.isValid(value)) {
-                    return helpers.error('any.invalid', { label: 'IBAN' });
+                    return helpers.error('any.invalid', { 
+                        message: 'Invalid IBAN format or checksum',
+                        label: 'IBAN' 
+                    });
                 }
-                return value;
-            }, 'Global IBAN validation'),
+                
+                const formattedIBAN = IBAN.electronicFormat(value);
+                
+                return formattedIBAN;
+            }, 'Global IBAN validation')
+            .messages({
+                'any.invalid': '{{#label}} is invalid',
+                'string.empty': '{{#label}} cannot be empty',
+                'any.required': '{{#label}} is required'
+            }),
     }).required(),
     email: Joi.string().email().required(),
     name: Joi.string().required(),
@@ -58,6 +70,7 @@ export const partnerSignupSchema = Joi.object<PartnerSignupSchema>({
         })
     ).optional().min(1),
     vat_number: Joi.string().optional(),
+    visualIdentity: Joi.object().optional(),
     logoBase64: Joi.string()
         .custom((value, helpers) => {
             if (!value) return value;

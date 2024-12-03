@@ -15,7 +15,7 @@ export interface PartnerSchema {
     postal_code?: string;
     country?: string;
   };
-  banking_details: {
+  banking_details?: {
     account_holder: string;
     bank_name: string;
     iban: string;
@@ -64,7 +64,7 @@ export const partnerSchema = Joi.object<PartnerSchema>({
         }
         return value;
       }, 'Global IBAN validation'),
-  }).required(),
+  }).optional(),
   users: Joi.array().items(
     Joi.object({
         name: Joi.string().required(),
