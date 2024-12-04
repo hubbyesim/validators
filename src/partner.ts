@@ -16,9 +16,9 @@ export interface PartnerSchema {
     country?: string;
   };
   banking_details?: {
-    account_holder: string;
-    bank_name: string;
-    iban: string;
+    account_holder?: string;
+    bank_name?: string;
+    iban?: string;
   };
   users?: {
     name: string;
@@ -54,12 +54,12 @@ export const partnerSchema = Joi.object<PartnerSchema>({
     country: Joi.string().optional(),
   }).optional(),
   banking_details: Joi.object({
-    account_holder: Joi.string().required(),
-    bank_name: Joi.string().required(),
+    account_holder: Joi.string().optional(),
+    bank_name: Joi.string().optional(),
     iban: Joi.string()
-      .required()
+      .optional()
       .custom((value, helpers) => {
-        if (!IBAN.isValid(value)) {
+        if (value && !IBAN.isValid(value)) {
           return helpers.error('any.invalid', { label: 'IBAN' });
         }
         return value;
