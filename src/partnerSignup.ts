@@ -53,7 +53,7 @@ export const partnerSignupSchema = Joi.object<PartnerSignupSchema>({
                 return formattedIBAN;
             }, 'Global IBAN validation')
             .messages({
-                'any.invalid': '{{#label}} is invalid',
+                'any.invalid': '{{#label}} invalid format',
                 'string.empty': '{{#label}} cannot be empty',
                 'any.required': '{{#label}} is required'
             }),
@@ -68,7 +68,7 @@ export const partnerSignupSchema = Joi.object<PartnerSignupSchema>({
             name: Joi.string().required(),
             email: Joi.string().email().required()
         })
-    ).optional().min(1),
+    ).optional(),
     vat_number: Joi.string().optional(),
     visualIdentity: Joi.object().optional(),
     logoBase64: Joi.string()
