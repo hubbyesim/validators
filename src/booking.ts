@@ -36,13 +36,13 @@ export interface BookingSchema {
 const sizePattern = /^[1-9]\d*(MB|GB)$/;
 const destinationPattern = /^[A-Z]{2,3}$/;
 
+// Package Specification Schema: Ensures `destination` is required
 const packageSpecificationSchema = Joi.object<PackageSpecification>({
   package_id: Joi.string(),
-  destination: Joi.string().pattern(destinationPattern),
+  destination: Joi.string().pattern(destinationPattern).required(),
   iata_code: Joi.string().pattern(destinationPattern),
   size: Joi.string().pattern(sizePattern),
-})
-  .or('package_id', 'destination', 'iata_code');
+}).or('package_id', 'destination', 'iata_code');
 
 const communication_options = Joi.object<CommunicationOptions>({
   should_send_message: Joi.boolean().required(),
@@ -50,8 +50,8 @@ const communication_options = Joi.object<CommunicationOptions>({
 });
 
 export const bookingSchema = Joi.object<BookingSchema>({
-  departure_date: Joi.date().iso().required(),
-  email: Joi.string().email().optional(),
+  departure_date: Joi.date().iso().required(), // Required field
+  email: Joi.string().email().optional(), // Optional, but required with OR condition
   phone: Joi.string()
     .pattern(/^\+\d{1,3}\d{1,14}$/)
     .optional(),
@@ -60,7 +60,7 @@ export const bookingSchema = Joi.object<BookingSchema>({
   full_name: Joi.string().min(1).max(200).optional(),
   title: Joi.string().valid('mr.', 'ms.', 'mrs.', 'miss', 'dr.', 'prof.').insensitive().optional(),
   pax: Joi.number().integer().min(1).optional(),
-  return_date: Joi.date().iso().min(Joi.ref('departure_date')).required(),
+  return_date: Joi.date().iso().min(Joi.ref('departure_date')).required(), // Must be after departure_date
   flight_number: Joi.string().alphanum().min(1).max(10).optional(),
   gender: Joi.string().valid('M', 'F', 'O').optional(),
   date_of_birth: Joi.date().iso().max('now').optional(),
@@ -71,5 +71,5 @@ export const bookingSchema = Joi.object<BookingSchema>({
   package_specifications: Joi.array().items(packageSpecificationSchema).min(1).required(),
 })
   .label('Booking')
-  .or('email', 'booking_id')
+  .or('email', 'booking_id') // Enforces at least one of these
   .options({ abortEarly: false, stripUnknown: true });
