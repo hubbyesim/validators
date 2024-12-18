@@ -3,7 +3,7 @@ import Joi from 'joi';
 // Define interfaces for the schema types
 interface PackageSpecification {
   package_id?: string;
-  destination?: string;
+  destination: string;
   iata_code?: string;
   size?: string;
 }
@@ -22,14 +22,14 @@ export interface BookingSchema {
   full_name?: string;
   title?: 'mr.' | 'ms.' | 'mrs.' | 'miss' | 'dr.' | 'prof.';
   pax?: number;
-  return_date: Date;
+  return_date?: Date;
   flight_number?: string;
   gender?: 'M' | 'F' | 'O';
   date_of_birth?: Date;
   data?: Record<string, unknown>;
   locale?: string;
   booking_id?: string;
-  communication_options: CommunicationOptions;
+  communication_options?: CommunicationOptions;
   package_specifications: PackageSpecification[];
 }
 
@@ -38,11 +38,11 @@ const destinationPattern = /^[A-Z]{2,3}$/;
 
 // Package Specification Schema: Ensures `destination` is required
 const packageSpecificationSchema = Joi.object<PackageSpecification>({
-  package_id: Joi.string(),
+  package_id: Joi.string().optional(),
   destination: Joi.string().pattern(destinationPattern).required(),
-  iata_code: Joi.string().pattern(destinationPattern),
-  size: Joi.string().pattern(sizePattern),
-}).or('package_id', 'destination', 'iata_code');
+  iata_code: Joi.string().pattern(destinationPattern).optional(),
+  size: Joi.string().pattern(sizePattern).optional(),
+});
 
 const communication_options = Joi.object<CommunicationOptions>({
   should_send_message: Joi.boolean().required(),
@@ -60,15 +60,15 @@ export const bookingSchema = Joi.object<BookingSchema>({
   full_name: Joi.string().min(1).max(200).optional(),
   title: Joi.string().valid('mr.', 'ms.', 'mrs.', 'miss', 'dr.', 'prof.').insensitive().optional(),
   pax: Joi.number().integer().min(1).optional(),
-  return_date: Joi.date().iso().min(Joi.ref('departure_date')).required(), // Must be after departure_date
+  return_date: Joi.date().iso().min(Joi.ref('departure_date')).optional(), // Optional
   flight_number: Joi.string().alphanum().min(1).max(10).optional(),
   gender: Joi.string().valid('M', 'F', 'O').optional(),
   date_of_birth: Joi.date().iso().max('now').optional(),
   data: Joi.object().optional(),
   locale: Joi.string().min(2).max(5).optional(),
-  booking_id: Joi.string().optional().min(3),
-  communication_options: communication_options.required(),
-  package_specifications: Joi.array().items(packageSpecificationSchema).min(1).required(),
+  booking_id: Joi.string().min(3).optional(),
+  communication_options: communication_options.optional(), 
+  package_specifications: Joi.array().items(packageSpecificationSchema).min(1).required(), // Required
 })
   .label('Booking')
   .or('email', 'booking_id') // Enforces at least one of these
