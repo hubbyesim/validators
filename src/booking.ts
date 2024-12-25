@@ -3,7 +3,7 @@ import Joi from 'joi';
 // Define interfaces for the schema types
 interface PackageSpecification {
   package_id?: string;
-  destination: string;
+  destination?: string;
   iata_code?: string;
   size?: string;
 }
