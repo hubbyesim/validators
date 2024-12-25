@@ -6,6 +6,7 @@ export interface PackageSchema {
   iso: string;
   days: number;
   price: number;
+  isHidden: boolean;
 }
 
 const destinationPattern = /^[A-Z]{2,3}$/;
@@ -16,6 +17,7 @@ export const packageSchema = Joi.object<PackageSchema>({
   iso: Joi.string().required().pattern(destinationPattern),
   days: Joi.number().required(),
   price: Joi.number().required(),
+  isHidden: Joi.boolean().default(false),
 })
   .label('Package')
   .options({ abortEarly: false, stripUnknown: true });
