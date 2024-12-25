@@ -2,7 +2,7 @@ import Joi from 'joi';
 
 interface PackageSpecification {
   package_id?: string;
-  destination?: string;
+  destination: string; 
   iata_code?: string;
   size?: string;
 }
