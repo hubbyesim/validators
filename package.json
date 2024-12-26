@@ -1,6 +1,6 @@
 {
   "name": "@hubbyesim/validators",
-  "version": "2.7.0",
+  "version": "3.0.0",
   "description": "Validators for the hubbyesim project",
   "main": "dist/index.js",
   "types": "dist/index.ts",
