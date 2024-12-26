@@ -39,10 +39,10 @@ const destinationPattern = /^[A-Z]{2,3}$/;
 // Package Specification Schema: Ensures `destination` is required
 const packageSpecificationSchema = Joi.object<PackageSpecification>({
   package_id: Joi.string().optional(),
-  destination: Joi.string().pattern(destinationPattern).required(),
+  destination: Joi.string().pattern(destinationPattern).optional(),
   iata_code: Joi.string().pattern(destinationPattern).optional(),
   size: Joi.string().pattern(sizePattern).optional(),
-});
+}).or('package_id', 'destination');
 
 const communication_options = Joi.object<CommunicationOptions>({
   should_send_message: Joi.boolean().required(),
