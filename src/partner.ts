@@ -85,7 +85,17 @@ export const partnerSchema = Joi.object<PartnerSchema>({
   iframeConfig: Joi.object().optional(),
   schedules: Joi.array().optional(),
   travelSpiritConfig: Joi.object().optional(),
-  commission_fee: Joi.number().optional(),
+  commission_fee: Joi.number()
+    .min(0)  // Cannot be negative
+    .max(100)  // Maximum 100%
+    .precision(2)  // Allow up to 2 decimal places
+    .optional()
+    .allow(null)
+    .messages({
+      'number.min': 'Commission fee cannot be negative',
+      'number.max': 'Commission fee cannot exceed 100%',
+      'number.precision': 'Commission fee can have at most 2 decimal places'
+    }),
 })
   .label('Partner')
   .options({ abortEarly: false, stripUnknown: true });
