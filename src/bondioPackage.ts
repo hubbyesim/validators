@@ -1,5 +1,6 @@
 import Joi from 'joi';
 import { patterns } from './utils/patterns';
+import type { Country } from '@hubbyesim/types';
 
 // Define interface for the schema type
 export interface BondioPackageSchema {
@@ -7,10 +8,12 @@ export interface BondioPackageSchema {
   periodDays: number;
   periodIterations: number;
   price: number;
-  isHidden: boolean;
   size: string;
-  partner?: string;
-  subscription_type: 'lambda' | 'xi';
+  partner?: string | null;
+  label: 'lambda' | 'tau';
+  is_hidden: boolean;
+  is_active: boolean;
+  priority: number;
 }
 
 export const bondioPackageSchema = Joi.object<BondioPackageSchema>({
@@ -40,9 +43,6 @@ export const bondioPackageSchema = Joi.object<BondioPackageSchema>({
     .required()
     .positive(),
 
-  isHidden: Joi.boolean()
-    .required(),
-
   size: Joi.string()
     .required()
     .pattern(patterns.size)
@@ -51,13 +51,28 @@ export const bondioPackageSchema = Joi.object<BondioPackageSchema>({
     }),
 
   partner: Joi.string()
+    .allow('', null)
     .optional(),
 
-  subscription_type: Joi.string()
+    label: Joi.string()
     .required()
-    .valid('lambda', 'xi')
+    .valid('lambda', 'tau')
     .messages({
-      'any.only': 'Subscription type must be either "lambda" or "xi"'
+      'any.only': 'Label must be either "lambda" or "tau"'
+    }),
+
+  is_hidden: Joi.boolean()
+    .default(false),
+
+  is_active: Joi.boolean()
+    .default(true),
+
+  priority: Joi.number()
+    .min(1)
+    .required()
+    .messages({
+        'number.min': 'Priority must be at least 1',
+        'number.base': 'Priority must be a number',
     }),
 })
   .label('BondioPackage')
