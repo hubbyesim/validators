@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import { patterns } from './utils/patterns';
 
 interface PackageSpecification {
   package_id?: string;
@@ -11,14 +12,11 @@ export interface PackageSpecificationsSchema {
   package_specifications: PackageSpecification[];
 }
 
-const sizePattern = /^[1-9]\d*(MB|GB)$/;
-const destinationPattern = /^[A-Z]{2,3}$/;
-
 const packageSpecificationSchema = Joi.object<PackageSpecification>({
   package_id: Joi.string(), // package_id property can be any string
-  destination: Joi.string().pattern(destinationPattern), // ISO3 string for destination
-  iata_code: Joi.string().pattern(destinationPattern), // ISO3 string for destination
-  size: Joi.string().pattern(sizePattern), // size in the form of "500MB" or "3GB"
+  destination: Joi.string().pattern(patterns.destination), 
+  iata_code: Joi.string().pattern(patterns.destination),
+  size: Joi.string().pattern(patterns.size),
 })
   .or('package_id', 'destination', 'iata_code'); // Must have either package_id or destination or iata
 
