@@ -37,7 +37,7 @@ export interface BookingSchema {
 // Package Specification Schema: Ensures `destination` is required
 const packageSpecificationSchema = Joi.object<PackageSpecification>({
   package_id: Joi.string().optional(),
-  destination: Joi.string().pattern(patterns.destination).optional(),
+  destination: Joi.string().optional(),
   iata_code: Joi.string().pattern(patterns.destination).optional(),
   size: Joi.string().pattern(patterns.size).optional(),
 }).or('package_id', 'destination');
@@ -65,7 +65,7 @@ export const bookingSchema = Joi.object<BookingSchema>({
   data: Joi.object().optional(),
   locale: Joi.string().min(2).max(5).optional(),
   booking_id: Joi.string().min(3).optional(),
-  communication_options: communication_options.optional(), 
+  communication_options: communication_options.optional(),
   package_specifications: Joi.array().items(packageSpecificationSchema).min(1).required(), // Required
 })
   .label('Booking')
