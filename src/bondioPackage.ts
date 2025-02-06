@@ -14,6 +14,8 @@ export interface BondioPackageSchema {
   is_hidden: boolean;
   is_active: boolean;
   priority: number;
+  throttling: number;
+  packageType: string;
 }
 
 export const bondioPackageSchema = Joi.object<BondioPackageSchema>({
@@ -73,6 +75,21 @@ export const bondioPackageSchema = Joi.object<BondioPackageSchema>({
     .messages({
         'number.min': 'Priority must be at least 1',
         'number.base': 'Priority must be a number',
+    }),
+
+  throttling: Joi.number()
+    .min(0)
+    .required()
+    .messages({
+        'number.min': 'Throttling must be at least 0',
+        'number.base': 'Throttling must be a number',
+    }),
+
+  packageType: Joi.string()
+    .required()
+    .valid('data-limited', 'time-limited')
+    .messages({
+      'any.only': 'Package type must be either "data-limited" or "time-limited"',
     }),
 })
   .label('BondioPackage')

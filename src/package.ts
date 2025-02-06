@@ -12,6 +12,8 @@ export interface PackageSchema {
   is_hidden: boolean;
   is_active: boolean;
   priority: number;
+  throttling: number;
+  packageType: string;
 }
 
 export const packageSchema = Joi.object<PackageSchema>({
@@ -28,6 +30,19 @@ export const packageSchema = Joi.object<PackageSchema>({
     .messages({
       'number.min': 'Priority must be at least 1',
       'number.base': 'Priority must be a number',
+    }),
+  throttling: Joi.number()
+    .min(0)
+    .required()
+    .messages({
+      'number.min': 'Throttling must be at least 0',
+      'number.base': 'Throttling must be a number',
+    }),
+  packageType: Joi.string()
+    .required()
+    .valid('data-limited', 'time-limited')
+    .messages({
+      'any.only': 'Package type must be either "data-limited" or "time-limited"',
     }),
 })
   .label('Package')
