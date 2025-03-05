@@ -38,6 +38,7 @@ export interface PartnerSchema {
   schedules?: unknown[];
   travelSpiritConfig?: Record<string, unknown>;
   commission_fee?: number | null;
+  data?: Record<string, unknown>;
 }
 
 export const partnerSchema = Joi.object<PartnerSchema>({
@@ -85,6 +86,7 @@ export const partnerSchema = Joi.object<PartnerSchema>({
   iframeConfig: Joi.object().optional(),
   schedules: Joi.array().optional(),
   travelSpiritConfig: Joi.object().optional(),
+  data: Joi.object().optional(),
   commission_fee: Joi.number()
     .min(0)  // Cannot be negative
     .max(100)  // Maximum 100%
