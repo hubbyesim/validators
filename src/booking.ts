@@ -1,6 +1,12 @@
 import Joi from 'joi';
 import { patterns } from './utils/patterns';
 
+
+export type SupportedLocales = 'en-US' | 'nl-NL' | 'de-DE' | 'fr-FR' | 'it-IT' | 'es-ES' | 'cs-CZ' | 'pl-PL';
+export type BookingStatus = 'pending' | 'confirmed' | 'completed' | 'cancelled' | 'unpaid' | 'expired';
+
+const supportedLocales = ['en-US', 'nl-NL', 'de-DE', 'fr-FR', 'it-IT', 'es-ES', 'cs-CZ', 'pl-PL', 'en', 'nl', 'de', 'fr', 'it', 'es', 'cs', 'pl'] as const;
+
 // Define interfaces for the schema types
 interface PackageSpecification {
   package_id?: string;
@@ -28,7 +34,8 @@ export interface BookingSchema {
   gender?: 'M' | 'F' | 'O';
   date_of_birth?: Date;
   data?: Record<string, unknown>;
-  locale?: string;
+  locale?: SupportedLocales;
+  status?: BookingStatus;
   booking_id?: string;
   communication_options?: CommunicationOptions;
   package_specifications: PackageSpecification[];
@@ -63,7 +70,7 @@ export const bookingSchema = Joi.object<BookingSchema>({
   gender: Joi.string().valid('M', 'F', 'O').optional(),
   date_of_birth: Joi.date().iso().max('now').optional(),
   data: Joi.object().optional(),
-  locale: Joi.string().min(2).max(5).optional(),
+  locale: Joi.string().valid(...Object.values(supportedLocales)).optional(),
   booking_id: Joi.string().min(3).optional(),
   communication_options: communication_options.optional(),
   package_specifications: Joi.array().items(packageSpecificationSchema).min(1).required(), // Required
