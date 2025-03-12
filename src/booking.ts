@@ -1,11 +1,11 @@
 import Joi from 'joi';
 import { patterns } from './utils/patterns';
+import { BookingApiRequest } from '@hubbyesim/types';
 
-
-export type SupportedLocales = 'en-US' | 'nl-NL' | 'de-DE' | 'fr-FR' | 'it-IT' | 'es-ES' | 'cs-CZ' | 'pl-PL';
 export type BookingStatus = 'pending' | 'confirmed' | 'completed' | 'cancelled' | 'unpaid' | 'expired';
 
-const supportedLocales = ['en-US', 'nl-NL', 'de-DE', 'fr-FR', 'it-IT', 'es-ES', 'cs-CZ', 'pl-PL', 'en', 'nl', 'de', 'fr', 'it', 'es', 'cs', 'pl'] as const;
+//Backward compatibility with old locales
+const allowedLocales = ['en-US', 'nl-NL', 'de-DE', 'fr-FR', 'it-IT', 'es-ES', 'cs-CZ', 'pl-PL', 'en', 'nl', 'de', 'fr', 'it', 'es', 'cs', 'pl'] as const;
 
 // Define interfaces for the schema types
 interface PackageSpecification {
@@ -18,27 +18,6 @@ interface PackageSpecification {
 interface CommunicationOptions {
   should_send_message: boolean;
   channels?: Array<'EMAIL' | 'PUSH' | 'SMS' | 'WHATSAPP'>;
-}
-
-export interface BookingSchema {
-  departure_date: Date;
-  email?: string;
-  phone?: string;
-  first_name?: string;
-  last_name?: string;
-  full_name?: string;
-  title?: 'mr.' | 'ms.' | 'mrs.' | 'miss' | 'dr.' | 'prof.';
-  pax?: number;
-  return_date?: Date;
-  flight_number?: string;
-  gender?: 'M' | 'F' | 'O';
-  date_of_birth?: Date;
-  data?: Record<string, unknown>;
-  locale?: SupportedLocales;
-  status?: BookingStatus;
-  booking_id?: string;
-  communication_options?: CommunicationOptions;
-  package_specifications: PackageSpecification[];
 }
 
 // Package Specification Schema: Ensures `destination` is required
@@ -54,7 +33,7 @@ const communication_options = Joi.object<CommunicationOptions>({
   channels: Joi.array().items(Joi.string().valid('EMAIL', 'PUSH', 'SMS', 'WHATSAPP')).optional(),
 });
 
-export const bookingSchema = Joi.object<BookingSchema>({
+export const bookingSchema = Joi.object<BookingApiRequest>({
   departure_date: Joi.date().iso().required(), // Required field
   email: Joi.string().email().optional(), // Optional, but required with OR condition
   phone: Joi.string()
@@ -68,9 +47,8 @@ export const bookingSchema = Joi.object<BookingSchema>({
   return_date: Joi.date().iso().min(Joi.ref('departure_date')).optional(), // Optional
   flight_number: Joi.string().alphanum().min(1).max(10).optional(),
   gender: Joi.string().valid('M', 'F', 'O').optional(),
-  date_of_birth: Joi.date().iso().max('now').optional(),
   data: Joi.object().optional(),
-  locale: Joi.string().valid(...Object.values(supportedLocales)).optional(),
+  locale: Joi.string().valid(...Object.values(allowedLocales)).optional(),
   booking_id: Joi.string().min(3).optional(),
   communication_options: communication_options.optional(),
   package_specifications: Joi.array().items(packageSpecificationSchema).min(1).required(), // Required
@@ -78,3 +56,6 @@ export const bookingSchema = Joi.object<BookingSchema>({
   .label('Booking')
   .or('email', 'booking_id') // Enforces at least one of these
   .options({ abortEarly: false, stripUnknown: true });
+
+
+export type BookingSchema = Joi.ObjectSchema<BookingApiRequest>;
