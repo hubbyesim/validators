@@ -1,6 +1,6 @@
 {
   "name": "@hubbyesim/validators",
-  "version": "3.5.0",
+  "version": "3.5.1",
   "description": "Validators for the hubbyesim project",
   "main": "dist/index.js",
   "types": "dist/index.ts",
@@ -21,8 +21,5 @@
     "@types/joi": "^17.2.2",
     "@types/node": "^20.14.13",
     "typescript": "^5.5.4"
-  },
-  "peerDependencies": {
-    "@hubbyesim/types": "*"
   }
 }

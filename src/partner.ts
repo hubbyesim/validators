@@ -1,6 +1,6 @@
 import Joi from 'joi';
 import * as IBAN from 'iban';
-import { Partner } from '@hubbyesim/types';
+import { Partner, VisualIdentity, VisualIdentityBannerStrategy, VisualIdentityBanner } from '@hubbyesim/types';
 
 export const partnerSchema = Joi.object<Partner>({
   administration_fee: Joi.number().required(),
@@ -43,7 +43,31 @@ export const partnerSchema = Joi.object<Partner>({
   created_at: Joi.date().iso().optional(),
   updated_at: Joi.date().iso().optional(),
   packageStrategy: Joi.object().optional(),
-  visualIdentity: Joi.object().optional(),
+  visualIdentity: Joi.object<VisualIdentity>({
+    primary_color: Joi.string().optional(),
+    secondary_color: Joi.string().optional(),
+    logo: Joi.string().optional(),
+    top_banner: Joi.object<VisualIdentityBannerStrategy>({
+      strategy: Joi.string().valid('fixed', 'rotating', 'destination', 'timeOfDay').required(),
+      banners: Joi.array().items(Joi.object<VisualIdentityBanner>({
+        image_url: Joi.string().required(),
+        alt: Joi.string().required(),
+        click_url: Joi.string().allow('').optional(),
+        locale: Joi.string().optional(),
+        properties: Joi.object().pattern(Joi.string(), Joi.string()).optional()
+      })).required()
+    }).optional(),
+    mid_banner: Joi.object<VisualIdentityBannerStrategy>({
+      strategy: Joi.string().valid('fixed', 'rotating', 'destination', 'timeOfDay').required(),
+      banners: Joi.array().items(Joi.object<VisualIdentityBanner>({
+        image_url: Joi.string().required(),
+        alt: Joi.string().required(),
+        click_url: Joi.string().allow('').optional(),
+        locale: Joi.string().optional(),
+        properties: Joi.object().pattern(Joi.string(), Joi.string()).optional()
+      })).required()
+    }).optional()
+  }).optional(),
   schedules: Joi.array().optional(),
   travelSpiritConfig: Joi.object().optional(),
   booking_confirmation: Joi.object().optional(),
