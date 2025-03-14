@@ -46,6 +46,7 @@ export const partnerSchema = Joi.object<Partner>({
   visualIdentity: Joi.object<VisualIdentity>({
     primary_color: Joi.string().optional(),
     secondary_color: Joi.string().optional(),
+    font: Joi.string().optional(),
     logo: Joi.string().optional(),
     top_banner: Joi.object<VisualIdentityBannerStrategy>({
       strategy: Joi.string().valid('fixed', 'rotating', 'destination', 'timeOfDay').required(),
