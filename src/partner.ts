@@ -1,47 +1,8 @@
 import Joi from 'joi';
 import * as IBAN from 'iban';
+import { Partner, VisualIdentity, VisualIdentityBannerStrategy, VisualIdentityBanner } from '@hubbyesim/types';
 
-export interface PartnerSchema {
-  administration_fee: number;
-  income_per_gb: number;
-  type: string;
-  requires_card: boolean;
-  name: string;
-  last_invoice: Date;
-  next_invoice: Date;
-  address?: {
-    street?: string;
-    city?: string;
-    postal_code?: string;
-    country?: string;
-  };
-  banking_details?: {
-    account_holder?: string;
-    bank_name?: string;
-    iban?: string;
-  };
-  users?: {
-    name: string;
-    email: string;
-  }[];
-  tax_number?: string;
-  office_phone?: string;
-  chamber_of_commerce_number?: string;
-  vat_number?: string;
-  anvr_number?: number;
-  email?: string;
-  created_at?: Date;
-  updated_at?: Date;
-  packageStrategy?: Record<string, unknown>;
-  visualIdentity?: Record<string, unknown>;
-  iframeConfig?: Record<string, unknown>;
-  schedules?: unknown[];
-  travelSpiritConfig?: Record<string, unknown>;
-  commission_fee?: number | null;
-  data?: Record<string, unknown>;
-}
-
-export const partnerSchema = Joi.object<PartnerSchema>({
+export const partnerSchema = Joi.object<Partner>({
   administration_fee: Joi.number().required(),
   income_per_gb: Joi.number().required(),
   type: Joi.string().required(),
@@ -69,8 +30,8 @@ export const partnerSchema = Joi.object<PartnerSchema>({
   }).optional(),
   users: Joi.array().items(
     Joi.object({
-        name: Joi.string().required(),
-        email: Joi.string().email().required()
+      name: Joi.string().required(),
+      email: Joi.string().email().required()
     })
   ).optional().min(1),
   tax_number: Joi.string().optional(),
@@ -82,11 +43,34 @@ export const partnerSchema = Joi.object<PartnerSchema>({
   created_at: Joi.date().iso().optional(),
   updated_at: Joi.date().iso().optional(),
   packageStrategy: Joi.object().optional(),
-  visualIdentity: Joi.object().optional(),
-  iframeConfig: Joi.object().optional(),
+  visualIdentity: Joi.object<VisualIdentity>({
+    primary_color: Joi.string().optional(),
+    secondary_color: Joi.string().optional(),
+    logo: Joi.string().optional(),
+    top_banner: Joi.object<VisualIdentityBannerStrategy>({
+      strategy: Joi.string().valid('fixed', 'rotating', 'destination', 'timeOfDay').required(),
+      banners: Joi.array().items(Joi.object<VisualIdentityBanner>({
+        image_url: Joi.string().required(),
+        alt: Joi.string().required(),
+        click_url: Joi.string().allow('').optional(),
+        locale: Joi.string().optional(),
+        properties: Joi.object().pattern(Joi.string(), Joi.string()).optional()
+      })).required()
+    }).optional(),
+    mid_banner: Joi.object<VisualIdentityBannerStrategy>({
+      strategy: Joi.string().valid('fixed', 'rotating', 'destination', 'timeOfDay').required(),
+      banners: Joi.array().items(Joi.object<VisualIdentityBanner>({
+        image_url: Joi.string().required(),
+        alt: Joi.string().required(),
+        click_url: Joi.string().allow('').optional(),
+        locale: Joi.string().optional(),
+        properties: Joi.object().pattern(Joi.string(), Joi.string()).optional()
+      })).required()
+    }).optional()
+  }).optional(),
   schedules: Joi.array().optional(),
   travelSpiritConfig: Joi.object().optional(),
-  data: Joi.object().optional(),
+  booking_confirmation: Joi.object().optional(),
   commission_fee: Joi.number()
     .min(0)  // Cannot be negative
     .max(100)  // Maximum 100%
@@ -101,3 +85,5 @@ export const partnerSchema = Joi.object<PartnerSchema>({
 })
   .label('Partner')
   .options({ abortEarly: false, stripUnknown: true });
+
+export type PartnerSchema = Joi.ObjectSchema<Partner>;
