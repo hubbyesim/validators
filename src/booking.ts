@@ -1,11 +1,27 @@
 import Joi from 'joi';
 import { patterns } from './utils/patterns';
 import { BookingApiRequest } from '@hubbyesim/types';
+import { supportedLocales } from '@hubbyesim/types';
 
 export type BookingStatus = 'pending' | 'confirmed' | 'completed' | 'cancelled' | 'unpaid' | 'expired';
 
-//Backward compatibility with old locales
-const allowedLocales = ['en-US', 'nl-NL', 'de-DE', 'fr-FR', 'it-IT', 'es-ES', 'cs-CZ', 'pl-PL', 'en', 'nl', 'de', 'fr', 'it', 'es', 'cs', 'pl'] as const;
+
+// Extract two-letter language codes from supportedLocales
+const extractTwoLetterCodes = (locales: readonly string[]): string[] => {
+  return locales.map(locale => {
+    // Extract the language part before the hyphen (e.g., 'en' from 'en-US')
+    const parts = locale.split('-');
+    return parts[0];
+  }).filter((value, index, self) => {
+    // Remove duplicates
+    return self.indexOf(value) === index;
+  });
+};
+
+// Combine full locale codes with their two-letter prefixes
+const twoLetterCodes = extractTwoLetterCodes(supportedLocales);
+export const allowedLocales = [...supportedLocales, ...twoLetterCodes] as const;
+export type AllowedLocales = (typeof allowedLocales)[number];
 
 // Define interfaces for the schema types
 interface PackageSpecification {
