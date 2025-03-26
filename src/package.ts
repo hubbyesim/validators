@@ -1,49 +1,30 @@
 import Joi from 'joi';
-import { patterns } from './utils/patterns';
-import type { Country } from '@hubbyesim/types';
+import { Package } from '@hubbyesim/types';
 
-// Define interface for the schema type
-export interface PackageSchema {
-  size: string;
-  iso: string;
-  days: number;
-  price: number;
-  partner?: string | null;
-  is_hidden: boolean;
-  is_active: boolean;
-  priority: number;
-  throttling: number;
-  packageType: string;
-}
-
-export const packageSchema = Joi.object<PackageSchema>({
-  size: Joi.string().required().pattern(patterns.size),
-  iso: Joi.string().required().pattern(patterns.destination),
-  days: Joi.number().required(),
+export const packageSchema = Joi.object<Package>({
+  external_id: Joi.string().required(),
+  provider: Joi.string().valid('telna', 'bondio').required(),
+  coverage_label: Joi.string().allow(null),
+  label: Joi.string().required(),
+  bytes: Joi.number().required(),
+  country: Joi.string().required(),
+  hidden: Joi.boolean().required(),
+  is_hidden: Joi.boolean().required(),
+  is_active: Joi.boolean().required(),
+  priority: Joi.number().required(),
+  country_data: Joi.object().allow(null),
   price: Joi.number().required(),
-  partner: Joi.string().allow(null, '').optional(),
-  is_hidden: Joi.boolean().default(false),
-  is_active: Joi.boolean().default(true),
-  priority: Joi.number()
-    .min(1)
-    .required()
-    .messages({
-      'number.min': 'Priority must be at least 1',
-      'number.base': 'Priority must be a number',
-    }),
-  throttling: Joi.number()
-    .min(0)
-    .required()
-    .messages({
-      'number.min': 'Throttling must be at least 0',
-      'number.base': 'Throttling must be a number',
-    }),
-  packageType: Joi.string()
-    .required()
-    .valid('data-limited', 'time-limited')
-    .messages({
-      'any.only': 'Package type must be either "data-limited" or "time-limited"',
-    }),
+  partner_price: Joi.number().required(),
+  days: Joi.number().required(),
+  partner: Joi.string().allow(null),
+  name: Joi.string().required(),
+  type: Joi.string().valid('data-limited', 'time-limited').allow(null),
+  throttling: Joi.number().optional(),
+  provider_parameters: Joi.object({
+    imsi: Joi.number().required()
+  }).allow(null)
 })
   .label('Package')
   .options({ abortEarly: false, stripUnknown: true });
+
+export type PackageSchema = Joi.ObjectSchema<Package>;

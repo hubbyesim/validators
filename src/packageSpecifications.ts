@@ -1,24 +1,18 @@
 import Joi from 'joi';
 import { patterns } from './utils/patterns';
-
-interface PackageSpecification {
-  package_id?: string;
-  destination: string; 
-  iata_code?: string;
-  size?: string;
-}
+import { PackageSpecification, PackageSpecifications } from '@hubbyesim/types';
 
 export interface PackageSpecificationsSchema {
-  package_specifications: PackageSpecification[];
+  package_specifications: PackageSpecifications;
 }
 
 const packageSpecificationSchema = Joi.object<PackageSpecification>({
-  package_id: Joi.string(), // package_id property can be any string
-  destination: Joi.string().pattern(patterns.destination), 
-  iata_code: Joi.string().pattern(patterns.destination),
-  size: Joi.string().pattern(patterns.size),
+  package_id: Joi.string().optional(),
+  destination: Joi.string().pattern(patterns.destination).optional(),
+  iata_code: Joi.string().pattern(patterns.destination).optional(),
+  size: Joi.string().pattern(patterns.size).optional(),
 })
-  .or('package_id', 'destination', 'iata_code'); // Must have either package_id or destination or iata
+  .or('package_id', 'destination', 'iata_code');
 
 export const packageSpecificationsSchema = Joi.object<PackageSpecificationsSchema>({
   package_specifications: Joi.array().items(packageSpecificationSchema).min(1).required(),
