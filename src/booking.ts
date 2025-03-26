@@ -2,8 +2,26 @@ import Joi from 'joi';
 import { patterns } from './utils/patterns';
 import { BookingApiRequest, PackageSpecification, CommunicationChannel } from '@hubbyesim/types';
 
-//Backward compatibility with old locales
-const allowedLocales = ['en-US', 'nl-NL', 'de-DE', 'fr-FR', 'it-IT', 'es-ES', 'cs-CZ', 'pl-PL', 'en', 'nl', 'de', 'fr', 'it', 'es', 'cs', 'pl'] as const;
+//Supported locales not working
+let tempLocales = ["en-US", "nl-NL", "de-DE", "fr-FR", "it-IT", "es-ES", "cs-CZ", "pl-PL", "pt-PT", "fr-BE", "nl-BE", "de-AT", "de-CH", "fr-CH", "it-CH", "de-BE"];
+
+
+// Extract two-letter language codes from supportedLocales
+const extractTwoLetterCodes = (locales: readonly string[]): string[] => {
+  return locales.map(locale => {
+    // Extract the language part before the hyphen (e.g., 'en' from 'en-US')
+    const parts = locale.split('-');
+    return parts[0];
+  }).filter((value, index, self) => {
+    // Remove duplicates
+    return self.indexOf(value) === index;
+  });
+};
+
+// Combine full locale codes with their two-letter prefixes
+const twoLetterCodes = extractTwoLetterCodes(tempLocales);
+export const allowedLocales = [...tempLocales, ...twoLetterCodes] as const;
+export type AllowedLocales = (typeof allowedLocales)[number];
 
 const packageSpecificationSchema = Joi.object<PackageSpecification>({
   package_id: Joi.string().optional(),
