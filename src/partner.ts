@@ -69,7 +69,27 @@ export const partnerSchema = Joi.object<Partner>({
       })).required()
     }).optional()
   }).optional(),
-  schedules: Joi.array().optional(),
+  schedules: Joi.array().items(
+    Joi.object({
+        key: Joi.string().required(),
+        email: Joi.object({
+            brevoTemplateId: Joi.number().required(),
+            travelerBrevoTemplateId: Joi.number().optional()
+        }).required(),
+        days: Joi.number().required(),
+        hour: Joi.number().required(),
+        moment: Joi.string().required(),
+        method: Joi.string().required(),
+        subject: Joi.object().pattern(
+            Joi.string(), // key (locale)
+            Joi.string()  // value (subject text)
+        ).optional(),
+        previewText: Joi.object().pattern(
+            Joi.string(), // key (locale)
+            Joi.string()  // value (preview text)
+        ).optional()
+    })
+  ).optional(),
   travelSpiritConfig: Joi.object().optional(),
   booking_confirmation: Joi.object().optional(),
   commission_fee: Joi.number()
