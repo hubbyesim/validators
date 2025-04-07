@@ -5,3 +5,4 @@ export { packageSpecificationsSchema, type PackageSpecificationsSchema } from '.
 export { checkoutSchema, type CheckoutSchema } from './checkout';
 export { partnerSignupSchema, type PartnerSignupSchema } from './partnerSignup';
 export { bondioPackageSchema, type BondioPackageSchema } from './bondioPackage';
+export { telnaPackageSchema, type TelnaPackageSchema } from './telnaPackage';

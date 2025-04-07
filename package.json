@@ -1,6 +1,6 @@
 {
   "name": "@hubbyesim/validators",
-  "version": "3.5.5",
+  "version": "4.0.0",
   "description": "Validators for the hubbyesim project",
   "main": "dist/index.js",
   "types": "dist/index.ts",
@@ -13,9 +13,9 @@
     "prepare": "npm run clean && npm run build"
   },
   "dependencies": {
+    "@hubbyesim/types": "github:hubbyesim/types",
     "iban": "^0.0.14",
-    "joi": "^17.13.3",
-    "@hubbyesim/types": "github:hubbyesim/types"
+    "joi": "^17.13.3"
   },
   "devDependencies": {
     "@types/joi": "^17.2.2",
