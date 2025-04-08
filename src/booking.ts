@@ -56,9 +56,7 @@ export const bookingSchema = Joi.object<BookingApiRequest>({
   locale: Joi.string().valid(...Object.values(allowedLocales)).optional(),
   booking_id: Joi.string().min(3).optional().allow(null),
   communication_options: communication_options.required(),
-  package_specifications: Joi.array().items(packageSpecificationSchema).min(1).required(),
-  created_at: Joi.date().required(),
-  updated_at: Joi.date().required()
+  package_specifications: Joi.array().items(packageSpecificationSchema).min(1).required()
 })
   .label('Booking')
   .or('email', 'booking_id') // Enforces at least one of these
