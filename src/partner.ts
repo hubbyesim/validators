@@ -14,12 +14,12 @@ import {
 } from '@hubbyesim/types';
 
 export const partnerSchema = Joi.object<Partner>({
-  administration_fee: Joi.number().allow(null),
+  administration_fee: Joi.number().required(),
   email: Joi.string().email().allow(null),
-  income_per_gb: Joi.number().allow(null),
+  income_per_gb: Joi.number().required(),
   name: Joi.string().allow(null),
   requires_card: Joi.boolean().allow(null),
-  type: Joi.string().allow(null),
+  type: Joi.string().required(),
   schedules: Joi.array().items(Joi.object<Schedule>({
     days: Joi.number().required(),
     email: Joi.object({
@@ -34,10 +34,10 @@ export const partnerSchema = Joi.object<Partner>({
     previewText: Joi.object().pattern(Joi.string(), Joi.string()).optional()
   })).allow(null),
   visualIdentity: Joi.object<VisualIdentity>({
-    primary_color: Joi.string().required(),
-    secondary_color: Joi.string().required(),
-    logo: Joi.string().required(),
-    font: Joi.string().required(),
+    primary_color: Joi.string().optional(),
+    secondary_color: Joi.string().optional(),
+    font: Joi.string().optional(),
+    logo: Joi.string().optional(),
     top_banner: Joi.object<VisualIdentityBannerStrategy>({
       strategy: Joi.string().valid('fixed', 'rotating', 'destination', 'timeOfDay').required(),
       banners: Joi.array().items(Joi.object<VisualIdentityBanner>({
