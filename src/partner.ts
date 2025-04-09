@@ -43,21 +43,21 @@ export const partnerSchema = Joi.object<Partner>({
       banners: Joi.array().items(Joi.object<VisualIdentityBanner>({
         image_url: Joi.string().required(),
         alt: Joi.string().required(),
-        click_url: Joi.string().required(),
-        locale: Joi.string().required(),
-        properties: Joi.object().pattern(Joi.string(), Joi.string()).required()
+        click_url: Joi.string().allow('').optional(),
+        locale: Joi.string().optional(),
+        properties: Joi.object().pattern(Joi.string(), Joi.string()).optional()
       })).required()
-    }).required(),
+    }).optional(),
     mid_banner: Joi.object<VisualIdentityBannerStrategy>({
       strategy: Joi.string().valid('fixed', 'rotating', 'destination', 'timeOfDay').required(),
       banners: Joi.array().items(Joi.object<VisualIdentityBanner>({
         image_url: Joi.string().required(),
         alt: Joi.string().required(),
-        click_url: Joi.string().required(),
-        locale: Joi.string().required(),
-        properties: Joi.object().pattern(Joi.string(), Joi.string()).required()
+        click_url: Joi.string().allow('').optional(),
+        locale: Joi.string().optional(),
+        properties: Joi.object().pattern(Joi.string(), Joi.string()).optional()
       })).required()
-    }).required()
+    }).optional()
   }).allow(null),
   pricingStrategy: Joi.object<PricingStrategy>({
     name: Joi.string().required(),
@@ -68,21 +68,10 @@ export const partnerSchema = Joi.object<Partner>({
     iso3WhiteList: Joi.array().items(Joi.string()).optional(),
     parameters: Joi.any().required()
   }).allow(null).optional(),
-  travelSpiritConfig: Joi.object<TravelSpiritConfig>({
-    id: Joi.string().required(),
-    dbHost: Joi.string().required(),
-    dbPort: Joi.number().required(),
-    dbUser: Joi.string().required(),
-    dbPassword: Joi.string().required(),
-    dbName: Joi.string().required(),
-    tableName: Joi.string().required(),
-    schedule: Joi.string().required(),
-    externalPartnerName: Joi.string().required()
-  }).allow(null).optional(),
+  travelSpiritConfig: Joi.object().optional(),
   next_invoice: Joi.date().iso().allow(null),
   last_invoice: Joi.date().iso().allow(null),
   parent: Joi.string().allow(null), // DocumentReference will be handled at model level
-  payment_method: Joi.string().valid('invoice', 'direct').required(),
   booking_confirmation: Joi.object<BookingConfirmation>({
     brevo_template_id: Joi.number().required(),
     send_booking_confirmation: Joi.boolean().required()
@@ -126,11 +115,7 @@ export const partnerSchema = Joi.object<Partner>({
       'number.min': 'Commission fee cannot be negative',
       'number.max': 'Commission fee cannot exceed 100%',
       'number.precision': 'Commission fee can have at most 2 decimal places'
-    }),
-  data: Joi.object({
-    source: Joi.string().required(),
-    manual: Joi.boolean().required()
-  }).allow(null).optional()
+    })
 })
   .label('Partner')
   .options({ abortEarly: false, stripUnknown: true });
