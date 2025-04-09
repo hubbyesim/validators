@@ -20,19 +20,7 @@ export const partnerSchema = Joi.object<Partner>({
   name: Joi.string().allow(null),
   requires_card: Joi.boolean().allow(null),
   type: Joi.string().required(),
-  schedules: Joi.array().items(Joi.object<Schedule>({
-    days: Joi.number().required(),
-    email: Joi.object({
-      brevoTemplateId: Joi.number().required(),
-      travelerBrevoTemplateId: Joi.number().optional()
-    }).required(),
-    hour: Joi.number().required(),
-    key: Joi.string().required(),
-    method: Joi.string().required(),
-    moment: Joi.string().required(),
-    subject: Joi.object().pattern(Joi.string(), Joi.string()).optional(),
-    previewText: Joi.object().pattern(Joi.string(), Joi.string()).optional()
-  })).allow(null),
+  schedules: Joi.array().optional(),
   visualIdentity: Joi.object<VisualIdentity>({
     primary_color: Joi.string().optional(),
     secondary_color: Joi.string().optional(),
