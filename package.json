@@ -13,7 +13,7 @@
     "prepare": "npm run clean && npm run build"
   },
   "dependencies": {
-    "@hubbyesim/types": "github:hubbyesim/types",
+    "@hubbyesim/types": "github:hubbyesim/types#feat/rework-partner-and-add-properties",
     "iban": "^0.0.14",
     "joi": "^17.13.3"
   },
