@@ -2,7 +2,43 @@ import Joi from 'joi';
 import * as IBAN from 'iban';
 import { Partner, VisualIdentity, VisualIdentityBannerStrategy, VisualIdentityBanner } from '@hubbyesim/types';
 
-export const partnerSchema = Joi.object<Partner>({
+//Temp fix for financial_properties until we merge the types
+interface NewPartnerFields extends Partner {
+  financial_properties: any
+  platform_settings: any
+  visual_identity: VisualIdentity
+  registration: any
+  contact: any
+}
+
+const visualIdentitySchema = Joi.object<VisualIdentity>({
+  primary_color: Joi.string().optional(),
+  secondary_color: Joi.string().optional(),
+  font: Joi.string().optional(),
+  logo: Joi.string().optional(),
+  top_banner: Joi.object<VisualIdentityBannerStrategy>({
+    strategy: Joi.string().valid('fixed', 'rotating', 'destination', 'timeOfDay').required(),
+    banners: Joi.array().items(Joi.object<VisualIdentityBanner>({
+      image_url: Joi.string().required(),
+      alt: Joi.string().required(),
+      click_url: Joi.string().allow('').optional(),
+      locale: Joi.string().optional(),
+      properties: Joi.object().pattern(Joi.string(), Joi.string()).optional()
+    })).required()
+  }).optional(),
+  mid_banner: Joi.object<VisualIdentityBannerStrategy>({
+    strategy: Joi.string().valid('fixed', 'rotating', 'destination', 'timeOfDay').required(),
+    banners: Joi.array().items(Joi.object<VisualIdentityBanner>({
+      image_url: Joi.string().required(),
+      alt: Joi.string().required(),
+      click_url: Joi.string().allow('').optional(),
+      locale: Joi.string().optional(),
+      properties: Joi.object().pattern(Joi.string(), Joi.string()).optional()
+    })).required()
+  }).optional()
+}).optional()
+
+export const partnerSchema = Joi.object<NewPartnerFields>({
   administration_fee: Joi.number().required(),
   income_per_gb: Joi.number().required(),
   type: Joi.string().required(),
@@ -43,32 +79,7 @@ export const partnerSchema = Joi.object<Partner>({
   created_at: Joi.date().iso().optional(),
   updated_at: Joi.date().iso().optional(),
   packageStrategy: Joi.object().optional(),
-  visualIdentity: Joi.object<VisualIdentity>({
-    primary_color: Joi.string().optional(),
-    secondary_color: Joi.string().optional(),
-    font: Joi.string().optional(),
-    logo: Joi.string().optional(),
-    top_banner: Joi.object<VisualIdentityBannerStrategy>({
-      strategy: Joi.string().valid('fixed', 'rotating', 'destination', 'timeOfDay').required(),
-      banners: Joi.array().items(Joi.object<VisualIdentityBanner>({
-        image_url: Joi.string().required(),
-        alt: Joi.string().required(),
-        click_url: Joi.string().allow('').optional(),
-        locale: Joi.string().optional(),
-        properties: Joi.object().pattern(Joi.string(), Joi.string()).optional()
-      })).required()
-    }).optional(),
-    mid_banner: Joi.object<VisualIdentityBannerStrategy>({
-      strategy: Joi.string().valid('fixed', 'rotating', 'destination', 'timeOfDay').required(),
-      banners: Joi.array().items(Joi.object<VisualIdentityBanner>({
-        image_url: Joi.string().required(),
-        alt: Joi.string().required(),
-        click_url: Joi.string().allow('').optional(),
-        locale: Joi.string().optional(),
-        properties: Joi.object().pattern(Joi.string(), Joi.string()).optional()
-      })).required()
-    }).optional()
-  }).optional(),
+  visualIdentity: visualIdentitySchema,
   schedules: Joi.array().optional(),
   travelSpiritConfig: Joi.object().optional(),
   booking_confirmation: Joi.object().optional(),
@@ -83,8 +94,15 @@ export const partnerSchema = Joi.object<Partner>({
       'number.max': 'Commission fee cannot exceed 100%',
       'number.precision': 'Commission fee can have at most 2 decimal places'
     }),
+  financial_properties: Joi.object().optional(),
+  platform_settings: Joi.object().optional(),
+  visual_identity: visualIdentitySchema,
+  registration: Joi.object().optional(),
+  contact: Joi.object().optional(),
 })
   .label('Partner')
   .options({ abortEarly: false, stripUnknown: true });
+
+
 
 export type PartnerSchema = Joi.ObjectSchema<Partner>;
