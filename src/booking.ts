@@ -28,7 +28,7 @@ const packageSpecificationSchema = Joi.object<PackageSpecification>({
   destination: Joi.string().optional(),
   iata_code: Joi.string().pattern(patterns.destination).optional(),
   size: Joi.string().pattern(patterns.size).optional(),
-}).or('package_id', 'destination');
+})
 
 const communication_options = Joi.object({
   should_send_message: Joi.boolean().required(),
