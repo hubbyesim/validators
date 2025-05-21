@@ -55,6 +55,7 @@ export const bookingSchema = Joi.object<BookingApiRequest>({
   data: Joi.object().optional(),
   locale: Joi.string().valid(...Object.values(allowedLocales)).optional(),
   booking_id: Joi.string().min(3).optional().allow(null),
+  external_id: Joi.string().optional().allow(null),
   communication_options: communication_options.required(),
   package_specifications: Joi.array().items(packageSpecificationSchema).min(1).required()
 })
