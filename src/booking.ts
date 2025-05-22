@@ -33,7 +33,7 @@ const packageSpecificationSchema = Joi.object<PackageSpecification>({
 const communication_options = Joi.object({
   should_send_message: Joi.boolean().required(),
   channels: Joi.array().items(
-    Joi.string().valid(CommunicationChannel.EMAIL, CommunicationChannel.WHATSAPP, CommunicationChannel.PUSH_NOTIFICATION, CommunicationChannel.SMS)
+    Joi.string().valid('EMAIL', 'WHATSAPP', 'PUSH_NOTIFICATION', 'SMS')
   ).optional(),
 });
 
