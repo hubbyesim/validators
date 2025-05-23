@@ -2,8 +2,10 @@ import Joi from 'joi';
 import { patterns } from './utils/patterns';
 import { BookingApiRequest, PackageSpecification, CommunicationChannel } from '@hubbyesim/types';
 
+
+
 //Supported locales not working
-let tempLocales = ["en-US", "nl-NL", "de-DE", "fr-FR", "it-IT", "es-ES", "cs-CZ", "pl-PL", "pt-PT", "fr-BE", "nl-BE", "de-AT", "de-CH", "fr-CH", "it-CH", "de-BE"];
+let tempLocales = ["en-US", "nl-NL", "de-DE", "fr-FR", "it-IT", "es-ES", "cs-CZ", "pl-PL", "pt-PT", "fr-BE", "nl-BE", "de-AT", "de-CH", "fr-CH", "it-CH", "de-BE", "en-AU"];
 
 
 // Extract two-letter language codes from supportedLocales
@@ -37,13 +39,14 @@ const communication_options = Joi.object({
   ).optional(),
 });
 
-export const bookingSchema = Joi.object<BookingApiRequest>({
+export const bookingSchema = Joi.object<{external_id: string} & BookingApiRequest>({
   departure_date: Joi.date().iso().required(),
   email: Joi.string().email().optional().allow(null),
   phone: Joi.string()
     .pattern(/^\+\d{1,3}\d{1,14}$/)
     .optional()
     .allow(null),
+  external_id: Joi.string().optional().allow(null),
   first_name: Joi.string().min(1).max(100).optional().allow(null),
   last_name: Joi.string().min(1).max(100).optional().allow(null),
   full_name: Joi.string().min(1).max(200).optional().allow(null),
