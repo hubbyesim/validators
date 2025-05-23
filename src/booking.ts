@@ -30,12 +30,12 @@ const packageSpecificationSchema = Joi.object<PackageSpecification>({
   destination: Joi.string().optional(),
   iata_code: Joi.string().pattern(patterns.destination).optional(),
   size: Joi.string().pattern(patterns.size).optional(),
-}).or('package_id', 'destination');
+})
 
 const communication_options = Joi.object({
   should_send_message: Joi.boolean().required(),
   channels: Joi.array().items(
-    Joi.string().valid(CommunicationChannel.EMAIL, CommunicationChannel.WHATSAPP, CommunicationChannel.PUSH_NOTIFICATION, CommunicationChannel.SMS)
+    Joi.string().valid('EMAIL', 'WHATSAPP', 'PUSH_NOTIFICATION', 'SMS')
   ).optional(),
 });
 
@@ -58,6 +58,7 @@ export const bookingSchema = Joi.object<{external_id: string} & BookingApiReques
   data: Joi.object().optional(),
   locale: Joi.string().valid(...Object.values(allowedLocales)).optional(),
   booking_id: Joi.string().min(3).optional().allow(null),
+  external_id: Joi.string().optional().allow(null),
   communication_options: communication_options.required(),
   package_specifications: Joi.array().items(packageSpecificationSchema).min(1).required()
 })
