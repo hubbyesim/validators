@@ -29,8 +29,8 @@ export const bondioPackageSchema = Joi.object<BondioPackageSchema>({
   periodDays: Joi.number()
     .required()
     .min(1)
-    .max(30)
-    .default(30)
+    .max(365)
+    .default(365)
     .messages({
       'number.min': 'Period days must be at least 1',
       'number.max': 'Period days cannot exceed 30',

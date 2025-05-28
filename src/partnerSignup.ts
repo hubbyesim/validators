@@ -16,7 +16,6 @@ export interface PartnerSignupSchema {
     email: string;
     name: string;
     office_phone?: string;
-    password: string;
     tax_number?: string;
     users: {
         name: string;
@@ -61,14 +60,6 @@ export const partnerSignupSchema = Joi.object<PartnerSignupSchema>({
     email: Joi.string().email().required(),
     name: Joi.string().required(),
     office_phone: Joi.string().optional(),
-    password: Joi.string()
-        .min(8)
-        .required()
-        .messages({
-            'string.min': 'Password must be at least 8 characters long',
-            'any.required': 'Password is required',
-            'string.empty': 'Password cannot be empty'
-        }),
     tax_number: Joi.string().optional(),
     users: Joi.array().items(
         Joi.object({
