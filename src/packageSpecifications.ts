@@ -1,9 +1,9 @@
 import Joi from 'joi';
 import { patterns } from './utils/patterns';
-import { PackageSpecification, PackageSpecifications } from '@hubbyesim/types';
+import { PackageSpecification } from '@hubbyesim/types';
 
 export interface PackageSpecificationsSchema {
-  package_specifications: PackageSpecifications;
+  package_specifications: [];
 }
 
 const packageSpecificationSchema = Joi.object<PackageSpecification>({

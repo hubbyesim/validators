@@ -4,13 +4,8 @@ import {
   Partner, 
   VisualIdentity, 
   VisualIdentityBannerStrategy, 
-  VisualIdentityBanner,
-  BookingDefaults,
-  BookingConfirmation,
-  Schedule,
-  TravelSpiritConfig,
-  PricingStrategy,
-  PackageStrategy
+  VisualIdentityBanner
+
 } from '@hubbyesim/types';
 
 export const partnerSchema = Joi.object<Partner>({
@@ -47,11 +42,11 @@ export const partnerSchema = Joi.object<Partner>({
       })).required()
     }).optional()
   }).allow(null),
-  pricingStrategy: Joi.object<PricingStrategy>({
+  pricingStrategy: Joi.object({
     name: Joi.string().required(),
     parameters: Joi.any().required()
   }).allow(null).optional(),
-  packageStrategy: Joi.object<PackageStrategy>({
+  packageStrategy: Joi.object({
     name: Joi.string().required(),
     iso3WhiteList: Joi.array().items(Joi.string()).optional(),
     parameters: Joi.any().required()
@@ -60,13 +55,13 @@ export const partnerSchema = Joi.object<Partner>({
   next_invoice: Joi.date().iso().allow(null),
   last_invoice: Joi.date().iso().allow(null),
   parent: Joi.string().allow(null), // DocumentReference will be handled at model level
-  booking_confirmation: Joi.object<BookingConfirmation>({
+  booking_confirmation: Joi.object({
     brevo_template_id: Joi.number().required(),
     send_booking_confirmation: Joi.boolean().required()
   }).allow(null),
   users: Joi.array().items(Joi.string()).allow(null), // DocumentReference will be handled at model level
   is_active: Joi.boolean().allow(null).optional(),
-  booking_defaults: Joi.object<BookingDefaults>({
+  booking_defaults: Joi.object({
     locale: Joi.string().required()
   }).allow(null),
   external_id: Joi.string().allow(null).optional(),
