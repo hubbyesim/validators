@@ -5,7 +5,7 @@ import { BookingApiRequest, PackageSpecification, CommunicationChannel } from '@
 
 
 //Supported locales not working
-let tempLocales = ["en-EU", "en-US", "nl-NL", "de-DE", "fr-FR", "it-IT", "es-ES", "cs-CZ", "pl-PL", "pt-PT", "fr-BE", "nl-BE", "de-AT", "de-CH", "fr-CH", "it-CH", "de-BE", "en-AU", "sk-SK"];
+let tempLocales = ["en-EU", "en-US", "en-GB", "nl-NL", "de-DE", "fr-FR", "it-IT", "es-ES", "cs-CZ", "pl-PL", "pt-PT", "fr-BE", "nl-BE", "de-AT", "de-CH", "fr-CH", "it-CH", "de-BE", "en-AU", "sk-SK"];
 
 
 // Extract two-letter language codes from supportedLocales
@@ -30,6 +30,7 @@ const packageSpecificationSchema = Joi.object<PackageSpecification>({
   destination: Joi.string().optional(),
   iata_code: Joi.string().pattern(patterns.destination).optional(),
   size: Joi.string().pattern(patterns.size).optional(),
+  package_type: Joi.string().optional(),
 })
 
 const communication_options = Joi.object({
