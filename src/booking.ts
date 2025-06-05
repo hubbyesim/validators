@@ -5,7 +5,7 @@ import { BookingApiRequest, PackageSpecification, CommunicationChannel } from '@
 
 
 //Supported locales not working
-let tempLocales = ["en-EU", "en-US", "nl-NL", "de-DE", "fr-FR", "it-IT", "es-ES", "cs-CZ", "pl-PL", "pt-PT", "fr-BE", "nl-BE", "de-AT", "de-CH", "fr-CH", "it-CH", "de-BE", "en-AU", "sk-SK"];
+let tempLocales = ["en-EU", "en-US", "nl-NL", "de-DE", "fr-FR", "it-IT", "es-ES", "cs-CZ", "pl-PL", "pt-PT", "fr-BE", "nl-BE", "de-AT", "de-CH", "fr-CH", "it-CH", "de-BE", "en-AU", "sk-SK", "en-GB", "sv-SE", "da-DK"];
 
 
 // Extract two-letter language codes from supportedLocales
